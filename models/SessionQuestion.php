@@ -3,25 +3,43 @@
 namespace Models;
 
 class SessionQuestion {
-    private $sessionId;
-    private $questionType;
-    private $questionId;
+    private int $sessionId;
+    private string $questionType;
+    private int $questionId;
 
-    function __construct($sessionId, $questionType, $questionId) {
+    /**
+     * SessionQuestion constructor.
+     * @param int $sessionId
+     * @param string $questionType
+     * @param int $questionId
+     */
+    public function __construct(int $sessionId, string $questionType, int $questionId) {
         $this->sessionId = $sessionId;
         $this->questionType = $questionType;
         $this->questionId = $questionId;
     }
 
-    function getSessionId() {
+    /**
+     * Get the session ID.
+     * @return int
+     */
+    public function getSessionId(): int {
         return $this->sessionId;
     }
 
-    function getQuestionType() {
+    /**
+     * Get the question type.
+     * @return string
+     */
+    public function getQuestionType(): string {
         return $this->questionType;
     }
 
-    function getQuestionId() {
+    /**
+     * Get the question ID.
+     * @return int
+     */
+    public function getQuestionId(): int {
         return $this->questionId;
     }
 }

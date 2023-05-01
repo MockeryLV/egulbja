@@ -1,29 +1,47 @@
 <?php
+
 namespace Controllers;
 
 use Models\MaQuestion;
 use Models\MaQuestionVariant;
 use PDO;
+use PDOException;
 
 require_once(__DIR__ . '/../models/MaQuestion.php');
 require_once(__DIR__ . '/../models/MaQuestionVariant.php');
 
+/**
+ * Class MaQuestionController
+ * @package Controllers
+ */
 class MaQuestionController {
+    /**
+     * @var PDO
+     */
     private $db;
 
-    function __construct($db) {
+    /**
+     * MaQuestionController constructor.
+     * @param PDO $db
+     */
+    public function __construct(PDO $db) {
         $this->db = $db;
     }
 
-    function getRandomQuestions($numQuestions) {
-        $questions = array();
+    /**
+     * @param int $numQuestions
+     * @return array
+     * @throws PDOException
+     */
+    public function getRandomQuestions(int $numQuestions): array {
+        $questions = [];
         $query = "SELECT * FROM maquestions ORDER BY RAND() LIMIT :count";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':count', $numQuestions, PDO::PARAM_INT);
         $stmt->execute();
         while ($row = $stmt->fetch()) {
             $question = new MaQuestion($row['id'], $row['text'], $row['is_multiple']);
-            $variants = array();
+            $variants = [];
             $query = "SELECT * FROM maquestion_variants WHERE maquestionid = :id";
             $variantStmt = $this->db->prepare($query);
             $variantStmt->bindParam(":id", $row['id'], PDO::PARAM_INT);
@@ -34,20 +52,20 @@ class MaQuestionController {
             $question->setVariants($variants);
             $questions[] = $question;
         }
-        $result = array();
+        $result = [];
         foreach ($questions as $question) {
-            $variants = array();
+            $variants = [];
             foreach ($question->getVariants() as $variant) {
-                $variants[] = array(
+                $variants[] = [
                     'variant' => $variant->getVariant(),
                     'is_correct' => $variant->getIsCorrect()
-                );
+                ];
             }
-            $result[] = array(
+            $result[] = [
                 'id' => $question->getId(),
                 'text' => $question->getText(),
                 'variants' => $variants
-            );
+            ];
         }
         return $result;
     }

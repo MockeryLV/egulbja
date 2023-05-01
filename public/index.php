@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 use Psr\Http\Server\RequestHandlerInterface;
 use Nyholm\Psr7\Factory\Psr17Factory;

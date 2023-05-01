@@ -34,6 +34,11 @@ class ComposerStaticInit9f2568564ceb1c1a4aea0c54e071e3d5
         array (
             'Utils\\' => 6,
         ),
+        'T' => 
+        array (
+            'Tuupola\\Middleware\\' => 19,
+            'Tuupola\\Http\\Factory\\' => 21,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
@@ -51,6 +56,7 @@ class ComposerStaticInit9f2568564ceb1c1a4aea0c54e071e3d5
         'N' => 
         array (
             'Nyholm\\Psr7\\' => 12,
+            'Neomerx\\Cors\\' => 13,
         ),
         'M' => 
         array (
@@ -89,6 +95,15 @@ class ComposerStaticInit9f2568564ceb1c1a4aea0c54e071e3d5
         array (
             0 => __DIR__ . '/../..' . '/utils',
         ),
+        'Tuupola\\Middleware\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/tuupola/callable-handler/src',
+            1 => __DIR__ . '/..' . '/tuupola/cors-middleware/src',
+        ),
+        'Tuupola\\Http\\Factory\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/tuupola/http-factory/src',
+        ),
         'Symfony\\Polyfill\\Php80\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
@@ -126,6 +141,10 @@ class ComposerStaticInit9f2568564ceb1c1a4aea0c54e071e3d5
         'Nyholm\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/nyholm/psr7/src',
+        ),
+        'Neomerx\\Cors\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/neomerx/cors-psr7/src',
         ),
         'Models\\' => 
         array (

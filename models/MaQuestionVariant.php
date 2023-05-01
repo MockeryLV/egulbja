@@ -4,36 +4,72 @@ namespace Models;
 
 use JsonSerializable;
 use PDO;
+use PDOException;
 
 class MaQuestionVariant implements JsonSerializable
 {
+    /** @var int */
     private $maQuestionId;
+
+    /** @var string */
     private $variant;
+
+    /** @var bool */
     private $isCorrect;
 
-    function __construct($maQuestionId, $variant, $isCorrect)
+    /**
+     * MaQuestionVariant constructor.
+     *
+     * @param int $maQuestionId
+     * @param string $variant
+     * @param bool $isCorrect
+     */
+    public function __construct(int $maQuestionId, string $variant, bool $isCorrect)
     {
         $this->maQuestionId = $maQuestionId;
         $this->variant = $variant;
         $this->isCorrect = $isCorrect;
     }
 
-    function getMaQuestionId()
+    /**
+     * Get the ID of the question associated with this variant.
+     *
+     * @return int
+     */
+    public function getMaQuestionId(): int
     {
         return $this->maQuestionId;
     }
 
-    function getVariant()
+    /**
+     * Get the text of the variant.
+     *
+     * @return string
+     */
+    public function getVariant(): string
     {
         return $this->variant;
     }
 
-    function getIsCorrect()
+    /**
+     * Check if this variant is correct.
+     *
+     * @return bool
+     */
+    public function getIsCorrect(): bool
     {
         return $this->isCorrect;
     }
 
-    public static function getVariantsForQuestion($db, $id)
+    /**
+     * Get all variants for a given question ID from the database.
+     *
+     * @param PDO $db
+     * @param int $id
+     * @return MaQuestionVariant[]
+     * @throws PDOException if the database query fails
+     */
+    public static function getVariantsForQuestion(PDO $db, int $id): array
     {
         $stmt = $db->prepare("SELECT * FROM maquestion_variants WHERE maquestionid = ?");
         $stmt->execute([$id]);
@@ -52,11 +88,16 @@ class MaQuestionVariant implements JsonSerializable
         return $variants;
     }
 
-    public function jsonSerialize() {
+    /**
+     * Convert this object to a JSON-serializable array.
+     *
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
         return [
             'variant' => $this->variant,
             'is_correct' => $this->isCorrect
         ];
     }
 }
-

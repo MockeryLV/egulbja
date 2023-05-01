@@ -1,28 +1,52 @@
 <?php
+
 namespace Controllers;
 
 use PDO;
 use Models\TfQuestion;
+use PDOException;
 
-require_once(__DIR__ . '/../models/TfQuestion.php');
-
+/**
+ * Controller for True/False questions.
+ */
 class TfQuestionController {
-    private $db;
+    private PDO $db;
 
-    function __construct($db) {
+    /**
+     * Creates a new TfQuestionController instance.
+     *
+     * @param PDO $db The PDO database connection.
+     */
+    public function __construct(PDO $db) {
         $this->db = $db;
     }
 
-    function getRandomQuestions($numQuestions) {
-        $questions = array();
-        $query = "SELECT * FROM tfquestions ORDER BY RAND() LIMIT :count";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':count', $numQuestions, PDO::PARAM_INT);
-        $stmt->execute();
+    /**
+     * Gets a random set of True/False questions.
+     *
+     * @param int $numQuestions The number of questions to retrieve.
+     *
+     * @return array An array of TfQuestion instances.
+     *
+     * @throws PDOException If there's an error with the database connection.
+     */
+    public function getRandomQuestions(int $numQuestions): array {
+        $questions = [];
 
-        while ($row = $stmt->fetch()) {
-            $questions[] = new TfQuestion($row['id'], $row['text'], $row['answer']);
+        try {
+            $query = "SELECT * FROM tfquestions ORDER BY RAND() LIMIT :count";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':count', $numQuestions, PDO::PARAM_INT);
+            $stmt->execute();
+
+            while ($row = $stmt->fetch()) {
+                $questions[] = new TfQuestion($row['id'], $row['text'], $row['answer']);
+            }
+        } catch (PDOException $e) {
+            // Handle the database error appropriately
+            throw new PDOException("Error retrieving questions: " . $e->getMessage());
         }
+
         return $questions;
     }
 }

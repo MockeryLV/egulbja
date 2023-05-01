@@ -4,59 +4,108 @@ namespace Models;
 
 use JsonSerializable;
 use PDO;
+use PDOException;
 
+/**
+ * Class TfQuestion
+ * @package Models
+ */
 class TfQuestion implements JsonSerializable {
-    private $id;
-    private $text;
-    private $answer;
+    private int $id;
+    private string $text;
+    private bool $answer;
 
-    function __construct($id, $text, $answer) {
+    /**
+     * TfQuestion constructor.
+     * @param int $id
+     * @param string $text
+     * @param bool $answer
+     */
+    public function __construct(int $id, string $text, bool $answer) {
         $this->id = $id;
         $this->text = $text;
         $this->answer = $answer;
     }
 
-    public function getId() {
+    /**
+     * Get the ID of the question
+     * @return int
+     */
+    public function getId(): int {
         return $this->id;
     }
 
-    public function getText() {
+    /**
+     * Get the text of the question
+     * @return string
+     */
+    public function getText(): string {
         return $this->text;
     }
 
-    public function getAnswer() {
+    /**
+     * Get the answer of the question
+     * @return bool
+     */
+    public function getAnswer(): bool {
         return $this->answer;
     }
 
-    public static function getById($db, $id)
+    /**
+     * Get a TfQuestion object by its ID
+     * @param PDO $db
+     * @param int $id
+     * @return TfQuestion|null
+     * @throws PDOException
+     */
+    public static function getById(PDO $db, int $id): ?TfQuestion
     {
-        $stmt = $db->prepare('SELECT * FROM tfquestions WHERE id = :id');
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
+        try {
+            $stmt = $db->prepare('SELECT * FROM tfquestions WHERE id = :id');
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
 
-        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $id = $row['id'];
-            $text = $row['text'];
-            $answer = $row['answer'];
-            $tfQuestion = new TfQuestion($id, $text, $answer);
-            return $tfQuestion;
-        } else {
-            return null;
+            if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $id = $row['id'];
+                $text = $row['text'];
+                $answer = $row['answer'];
+                $tfQuestion = new TfQuestion($id, $text, $answer);
+                return $tfQuestion;
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            throw new PDOException($e->getMessage(), (int)$e->getCode());
         }
     }
 
-    public static function getRandomQuestions($db, $count) {
-        $stmt = $db->prepare('SELECT * FROM tfquestions ORDER BY RAND() LIMIT :count');
-        $stmt->bindParam(':count', $count, PDO::PARAM_INT);
-        $stmt->execute();
-        $questions = array();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $questions[] = new TfQuestion($row['id'], $row['text'], $row['answer']);
+    /**
+     * Get a number of random TfQuestion objects
+     * @param PDO $db
+     * @param int $count
+     * @return TfQuestion[]
+     * @throws PDOException
+     */
+    public static function getRandomQuestions(PDO $db, int $count): array {
+        try {
+            $stmt = $db->prepare('SELECT * FROM tfquestions ORDER BY RAND() LIMIT :count');
+            $stmt->bindParam(':count', $count, PDO::PARAM_INT);
+            $stmt->execute();
+            $questions = array();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $questions[] = new TfQuestion($row['id'], $row['text'], $row['answer']);
+            }
+            return $questions;
+        } catch (PDOException $e) {
+            throw new PDOException($e->getMessage(), (int)$e->getCode());
         }
-        return $questions;
     }
 
-    public function jsonSerialize() {
+    /**
+     * Specify data which should be serialized to JSON
+     * @return array
+     */
+    public function jsonSerialize(): array {
         return [
             'id' => $this->id,
             'text' => $this->text,
