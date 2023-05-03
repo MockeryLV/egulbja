@@ -77,38 +77,25 @@ class Session {
         $this->id = $id;
     }
 
-    /**
-     * Adds questions to the session.
-     *
-     * @param string $questionType The type of the questions to be added.
-     * @param array $questions An array of Question objects to be added.
-     * @return void
-     * @throws PDOException If there is an error with the database connection or query.
-     */
-    public function addQuestions(string $questionType, array $questions): void
-    {
-        $sessionQuestions = array();
-        foreach ($questions as $question) {
-            $sessionQuestions[] = new SessionQuestion($question->getId(), $questionType, $question->getId());
-        }
+	public function addQuestion(string $questionType, $question): void
+	{
+		try {
+			$query = "INSERT INTO session_questions (sessionid, question_type, ";
+			$query .= $questionType === 'ma' ? "maquestion_id)" : "tfquestion_id)";
+			$query .= " VALUES (:session_id, :question_type, :question_id)";
+			$stmt = $this->db->prepare($query);
 
-        try {
-            $query = "INSERT INTO session_questions (sessionid, question_type, question_id) VALUES (:session_id, :question_type, :question_id)";
-            $stmt = $this->db->prepare($query);
+			$sessionId = $this->getId();
+			$questionId = $question->getId();
 
-            foreach ($sessionQuestions as $sessionQuestion) {
-                $sessionId = $this->getId();
-                $questionType = $sessionQuestion->getQuestionType();
-                $questionId = $sessionQuestion->getQuestionId();
-                $stmt->bindParam(":session_id", $sessionId, PDO::PARAM_INT);
-                $stmt->bindParam(":question_type", $questionType, PDO::PARAM_STR);
-                $stmt->bindParam(":question_id", $questionId, PDO::PARAM_INT);
-                $stmt->execute();
-            }
-        } catch (PDOException $e) {
-            // Handle the exception here, such as logging the error or throwing a custom exception
-            // to be caught by the calling function.
-            throw new PDOException($e->getMessage());
-        }
-    }
+			$stmt->bindParam(":session_id", $sessionId, PDO::PARAM_INT);
+			$stmt->bindParam(":question_type", $questionType, PDO::PARAM_STR);
+			$stmt->bindParam(":question_id", $questionId, PDO::PARAM_INT);
+			$stmt->execute();
+		} catch (PDOException $e) {
+			// Handle the exception here, such as logging the error or throwing a custom exception
+			// to be caught by the calling function.
+			throw new PDOException($e->getMessage());
+		}
+	}
 }

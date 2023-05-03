@@ -46,6 +46,10 @@ class ComposerStaticInit9f2568564ceb1c1a4aea0c54e071e3d5
             'Slim\\Http\\' => 10,
             'Slim\\' => 5,
         ),
+        'R' => 
+        array (
+            'Repositories\\' => 13,
+        ),
         'P' => 
         array (
             'Psr\\Log\\' => 8,
@@ -119,6 +123,10 @@ class ComposerStaticInit9f2568564ceb1c1a4aea0c54e071e3d5
         'Slim\\' => 
         array (
             0 => __DIR__ . '/..' . '/slim/slim/Slim',
+        ),
+        'Repositories\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/repositories',
         ),
         'Psr\\Log\\' => 
         array (

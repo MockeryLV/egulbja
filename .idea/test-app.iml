@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/controllers" isTestSource="false" packagePrefix="Controllers\" />
       <sourceFolder url="file://$MODULE_DIR$/models" isTestSource="false" packagePrefix="Models\" />
       <sourceFolder url="file://$MODULE_DIR$/utils" isTestSource="false" packagePrefix="Utils\" />
+      <sourceFolder url="file://$MODULE_DIR$/repositories" isTestSource="false" packagePrefix="Repositories\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-message" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-server-middleware" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-server-handler" />
