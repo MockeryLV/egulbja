@@ -8,6 +8,8 @@
       <sourceFolder url="file://$MODULE_DIR$/models" isTestSource="false" packagePrefix="Models\" />
       <sourceFolder url="file://$MODULE_DIR$/utils" isTestSource="false" packagePrefix="Utils\" />
       <sourceFolder url="file://$MODULE_DIR$/repositories" isTestSource="false" packagePrefix="Repositories\" />
+      <sourceFolder url="file://$MODULE_DIR$/services" isTestSource="false" packagePrefix="Services\" />
+      <sourceFolder url="file://$MODULE_DIR$/validators" isTestSource="false" packagePrefix="Validators\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-message" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-server-middleware" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-server-handler" />

@@ -42,12 +42,12 @@ class MaQuestionController {
         while ($row = $stmt->fetch()) {
             $question = new MaQuestion($row['id'], $row['text'], $row['is_multiple']);
             $variants = [];
-            $query = "SELECT * FROM maquestion_variants WHERE maquestionid = :id";
+            $query = "SELECT * FROM maquestion_variants WHERE maquestion_id = :id";
             $variantStmt = $this->db->prepare($query);
             $variantStmt->bindParam(":id", $row['id'], PDO::PARAM_INT);
             $variantStmt->execute();
             while ($variantRow = $variantStmt->fetch()) {
-                $variants[] = new MaQuestionVariant($variantRow['maquestionid'], $variantRow['variant'], $variantRow['is_correct']);
+                $variants[] = new MaQuestionVariant($variantRow['maquestion_id'], $variantRow['variant'], $variantRow['is_correct']);
             }
             $question->setVariants($variants);
             $questions[] = $question;

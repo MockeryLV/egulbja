@@ -5,7 +5,9 @@
             "Controllers\\": "controllers/",
             "Models\\": "models/",
             "Utils\\": "utils/",
-            "Repositories\\": "repositories"
+            "Repositories\\": "repositories/",
+            "Services\\": "services/",
+            "Validators\\": "validators/"
         }
     },
     "require": {

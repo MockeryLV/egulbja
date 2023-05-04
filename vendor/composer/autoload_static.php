@@ -30,6 +30,10 @@ class ComposerStaticInit9f2568564ceb1c1a4aea0c54e071e3d5
     );
 
     public static $prefixLengthsPsr4 = array (
+        'V' => 
+        array (
+            'Validators\\' => 11,
+        ),
         'U' => 
         array (
             'Utils\\' => 6,
@@ -45,6 +49,7 @@ class ComposerStaticInit9f2568564ceb1c1a4aea0c54e071e3d5
             'Slim\\Psr7\\' => 10,
             'Slim\\Http\\' => 10,
             'Slim\\' => 5,
+            'Services\\' => 9,
         ),
         'R' => 
         array (
@@ -95,6 +100,10 @@ class ComposerStaticInit9f2568564ceb1c1a4aea0c54e071e3d5
     );
 
     public static $prefixDirsPsr4 = array (
+        'Validators\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/validators',
+        ),
         'Utils\\' => 
         array (
             0 => __DIR__ . '/../..' . '/utils',
@@ -123,6 +132,10 @@ class ComposerStaticInit9f2568564ceb1c1a4aea0c54e071e3d5
         'Slim\\' => 
         array (
             0 => __DIR__ . '/..' . '/slim/slim/Slim',
+        ),
+        'Services\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/services',
         ),
         'Repositories\\' => 
         array (

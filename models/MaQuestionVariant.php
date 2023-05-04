@@ -71,14 +71,15 @@ class MaQuestionVariant implements JsonSerializable
      */
     public static function getVariantsForQuestion(PDO $db, int $id): array
     {
-        $stmt = $db->prepare("SELECT * FROM maquestion_variants WHERE maquestionid = ?");
-        $stmt->execute([$id]);
+        $stmt = $db->prepare("SELECT * FROM maquestion_variants WHERE maquestion_id = :maquestion_id");
+        $stmt->bindParam(':maquestion_id', $id);
+        $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $variants = array();
         foreach ($results as $row) {
             $variant = new MaQuestionVariant(
-                $row['maquestionid'],
+                $row['maquestion_id'],
                 $row['variant'],
                 $row['is_correct']
             );
