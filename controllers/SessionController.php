@@ -56,6 +56,10 @@ class SessionController
 		return $this->sessionService->getSessionQuestionsCount($sessionId);
 	}
 
+	public function getSessionStatus($sessionId) {
+		return $this->sessionService->getSessionStatus($sessionId);
+	}
+
 	public function saveAnswerBySessionIdAndQuestionId(int $sessionId, array $question, ?string $answer = null): void
 	{
 		$this->sessionService->saveAnswerBySessionIdAndQuestionId($sessionId, $question, $answer);

@@ -12,9 +12,9 @@ use PDOException;
 
 class SessionRepository
 {
-	private $db;
+	private PDO $db;
 
-	public function __construct($db) {
+	public function __construct(PDO $db) {
 		$this->db = $db;
 	}
 
@@ -68,13 +68,12 @@ class SessionRepository
 
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$questionType = $row['question_type'];
-			$questionId = $row['question_id'];
 
 			if ($questionType === 'ma') {
-				$question = MaQuestion::getById($questionId, $this->db);
+				$question = MaQuestion::getById($this->db, $row['maquestion_id']);
 			}
 			else {
-				$question = TfQuestion::getById($questionId, $this->db);
+				$question = TfQuestion::getById($this->db, $row['tfquestion_id']);
 			}
 
 			array_push($questions, $question);
@@ -93,6 +92,37 @@ class SessionRepository
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 		return $row['count'];
+	}
+
+	/**
+	 * Returns an array with the status of a session
+	 *
+	 * @param int $sessionId The ID of the session to get the status of
+	 * @return array An array with the status of the session
+	 * @throws Exception If the session is not found
+	 */
+	public function getSessionStatus(int $sessionId): array {
+		try {
+			$query = "SELECT * FROM sessions WHERE id = :session_id";
+			$stmt = $this->db->prepare($query);
+			$stmt->bindParam(":session_id", $sessionId, PDO::PARAM_INT);
+			$stmt->execute();
+			$session = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			if (!$session) {
+				throw new Exception('Session not found');
+			}
+
+			$status = array(
+				'username' => $session['username'],
+				'maxPoints' => $session['max_points'],
+				'questions' => $this->getSessionQuestions($sessionId)
+			);
+
+			return $status;
+		} catch (PDOException $e) {
+			throw new Exception("Error getting session status: " . $e->getMessage());
+		}
 	}
 
 	public function getAnswerBySessionIdAndQuestionId($sessionId, $questionId) {
@@ -174,20 +204,6 @@ class SessionRepository
 
 		if (!$stmt->execute()) {
 			throw new Exception('Error updating session current points');
-		}
-	}
-
-	public function saveAnswer($sessionId, $questionId, $answer, $answerVariant) {
-		$query = "INSERT INTO session_answers (session_id, question_id, answer, answer_variant) VALUES (:session_id, :question_id, :answer, :answer_variant)";
-
-		$stmt = $this->db->prepare($query);
-		$stmt->bindValue(':session_id', $sessionId);
-		$stmt->bindValue(':question_id', $questionId);
-		$stmt->bindValue(':answer', $answer);
-		$stmt->bindValue(':answer_variant', $answerVariant);
-
-		if (!$stmt->execute()) {
-			throw new Exception('Error saving answer');
 		}
 	}
 

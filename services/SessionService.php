@@ -68,8 +68,8 @@ class SessionService {
 		return $this->sessionRepository->getSessionQuestionsCount($sessionId);
 	}
 
-	public function saveAnswer($sessionId, $answer, $answerVariant = null) {
-		$this->sessionRepository->saveAnswer($sessionId, $answer, $answerVariant);
+	public function getSessionStatus($sessionId) {
+		return $this->sessionRepository->getSessionStatus($sessionId);
 	}
 
 	public function saveAnswerBySessionIdAndQuestionId($sessionId, $question, $answer) {

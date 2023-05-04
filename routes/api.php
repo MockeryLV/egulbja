@@ -54,6 +54,12 @@ $app->group('/sessions', function (RouteCollectorProxy $group) use ($db) {
 		return $response->withJson(['sessionId' => $sessionId]);
 	});
 
+	// Get session status
+	$group->get('/{sessionId}', function ($request, $response, $args) use ($sessionController) {
+		$status = $sessionController->getSessionStatus($args['sessionId']);
+		return $response->withJson($status);
+	});
+
 	// Get active session
 	$group->get('', function ($request, $response, $args) use ($sessionController) {
 		if (!isset($_SESSION['sessionId'])) {
