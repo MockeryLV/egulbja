@@ -7,7 +7,8 @@ use Models\MaQuestion;
 use Models\Session;
 use Models\TfQuestion;
 
-class SessionService {
+class SessionService
+{
 	private $sessionRepository;
 
 	public function __construct($sessionRepository) {

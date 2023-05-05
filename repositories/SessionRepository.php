@@ -45,7 +45,8 @@ class SessionRepository
 			if ($questionType === 'ma') {
 				$stmt->bindValue(':maquestion_id', $question->getId());
 				$stmt->bindValue(':tfquestion_id', null);
-			} else {
+			}
+			else {
 				$stmt->bindValue(':maquestion_id', null);
 				$stmt->bindValue(':tfquestion_id', $question->getId());
 			}
@@ -75,6 +76,7 @@ class SessionRepository
 			else {
 				$question = TfQuestion::getById($this->db, $row['tfquestion_id']);
 			}
+			$question->setId($row['id']);
 
 			array_push($questions, $question);
 		}
@@ -97,9 +99,10 @@ class SessionRepository
 	/**
 	 * Returns an array with the status of a session
 	 *
-	 * @param int $sessionId The ID of the session to get the status of
-	 * @return array An array with the status of the session
+	 * @param int $sessionId  The ID of the session to get the status of
+	 *
 	 * @throws Exception If the session is not found
+	 * @return array An array with the status of the session
 	 */
 	public function getSessionStatus(int $sessionId): array {
 		try {
@@ -121,7 +124,7 @@ class SessionRepository
 
 			return $status;
 		} catch (PDOException $e) {
-			throw new Exception("Error getting session status: " . $e->getMessage());
+			throw new Exception("Error getting session status: ".$e->getMessage());
 		}
 	}
 
@@ -217,7 +220,8 @@ class SessionRepository
 					'maquestion_variant_id' => $variant['variant_id']
 				]);
 			}
-		} else {
+		}
+		else {
 			$stmt = $this->db->prepare("INSERT INTO session_answers (session_id, session_question_id, answer) VALUES (:session_id, :session_question_id, :answer)");
 			$stmt->execute([
 				'session_id' => $sessionId,
@@ -230,13 +234,12 @@ class SessionRepository
 	/**
 	 * Retrieves a MaQuestion object by its ID from the database.
 	 *
-	 * @param PDO $db The database connection object
-	 * @param int $id The ID of the MaQuestion to retrieve
+	 * @param PDO $db  The database connection object
+	 * @param int $id  The ID of the MaQuestion to retrieve
 	 *
 	 * @return MaQuestion|null The MaQuestion object, or null if not found
 	 */
-	public function getMaQuestionsById(int $id): ?MaQuestion
-	{
+	public function getMaQuestionsById(int $id): ?MaQuestion {
 		$query = "SELECT * FROM maquestions WHERE id = :id";
 		$stmt = $this->db->prepare($query);
 		$stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -245,7 +248,7 @@ class SessionRepository
 			$stmt->execute();
 		} catch (PDOException $e) {
 			// Handle database errors
-			error_log('PDOException: ' . $e->getMessage());
+			error_log('PDOException: '.$e->getMessage());
 			return null;
 		}
 
@@ -265,8 +268,7 @@ class SessionRepository
 		return $question;
 	}
 
-	public function getRandomMaQuestions(int $count): array
-	{
+	public function getRandomMaQuestions(int $count): array {
 		$query = "SELECT * FROM maquestions ORDER BY RAND() LIMIT :count";
 		$stmt = $this->db->prepare($query);
 		$stmt->bindValue(':count', $count, PDO::PARAM_INT);
@@ -288,13 +290,14 @@ class SessionRepository
 
 	/**
 	 * Get a TfQuestion object by its ID
+	 *
 	 * @param PDO $db
 	 * @param int $id
-	 * @return TfQuestion|null
+	 *
 	 * @throws PDOException
+	 * @return TfQuestion|null
 	 */
-	public function getTfQuestionById(PDO $db, int $id): ?TfQuestion
-	{
+	public function getTfQuestionById(PDO $db, int $id): ?TfQuestion {
 		try {
 			$stmt = $db->prepare('SELECT * FROM tfquestions WHERE id = :id');
 			$stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -306,7 +309,8 @@ class SessionRepository
 				$answer = $row['answer'];
 				$tfQuestion = new TfQuestion($id, $text, $answer);
 				return $tfQuestion;
-			} else {
+			}
+			else {
 				return null;
 			}
 		} catch (PDOException $e) {
@@ -316,10 +320,12 @@ class SessionRepository
 
 	/**
 	 * Get a number of random TfQuestion objects
+	 *
 	 * @param PDO $db
 	 * @param int $count
-	 * @return TfQuestion[]
+	 *
 	 * @throws PDOException
+	 * @return TfQuestion[]
 	 */
 	public function getRandomTfQuestions(int $count): array {
 		try {

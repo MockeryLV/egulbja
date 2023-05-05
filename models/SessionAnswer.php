@@ -16,13 +16,12 @@ class SessionAnswer implements JsonSerializable
 	/**
 	 * Initializes a new instance of the SessionAnswer class.
 	 *
-	 * @param int $id The answer ID.
-	 * @param int $sessionId The ID of the session that the answer belongs to.
-	 * @param int $questionId The ID of the question that the answer belongs to.
-	 * @param string $answer The text of the answer.
+	 * @param int    $id          The answer ID.
+	 * @param int    $sessionId   The ID of the session that the answer belongs to.
+	 * @param int    $questionId  The ID of the question that the answer belongs to.
+	 * @param string $answer      The text of the answer.
 	 */
-	public function __construct(int $id, int $sessionId, int $questionId, string $answer)
-	{
+	public function __construct(int $id, int $sessionId, int $questionId, string $answer) {
 		$this->id = $id;
 		$this->sessionId = $sessionId;
 		$this->questionId = $questionId;
@@ -34,8 +33,7 @@ class SessionAnswer implements JsonSerializable
 	 *
 	 * @return int The answer ID.
 	 */
-	public function getId(): int
-	{
+	public function getId(): int {
 		return $this->id;
 	}
 
@@ -44,8 +42,7 @@ class SessionAnswer implements JsonSerializable
 	 *
 	 * @return int The ID of the session that the answer belongs to.
 	 */
-	public function getSessionId(): int
-	{
+	public function getSessionId(): int {
 		return $this->sessionId;
 	}
 
@@ -54,8 +51,7 @@ class SessionAnswer implements JsonSerializable
 	 *
 	 * @return int The ID of the question that the answer belongs to.
 	 */
-	public function getQuestionId(): int
-	{
+	public function getQuestionId(): int {
 		return $this->questionId;
 	}
 
@@ -64,20 +60,18 @@ class SessionAnswer implements JsonSerializable
 	 *
 	 * @return string The text of the answer.
 	 */
-	public function getAnswer(): string
-	{
+	public function getAnswer(): string {
 		return $this->answer;
 	}
 
 	/**
 	 * Saves the SessionAnswer object to the database.
 	 *
-	 * @param PDO $db The database connection object.
+	 * @param PDO $db  The database connection object.
 	 *
 	 * @return bool True if the save was successful; otherwise, false.
 	 */
-	public function save(PDO $db): bool
-	{
+	public function save(PDO $db): bool {
 		$query = "INSERT INTO session_answers (session_id, question_id, answer) VALUES (:session_id, :question_id, :answer)";
 		$stmt = $db->prepare($query);
 		$stmt->bindParam(':session_id', $this->sessionId, PDO::PARAM_INT);
@@ -88,13 +82,12 @@ class SessionAnswer implements JsonSerializable
 			return $stmt->execute();
 		} catch (PDOException $e) {
 			// Handle database errors
-			error_log('PDOException: ' . $e->getMessage());
+			error_log('PDOException: '.$e->getMessage());
 			return false;
 		}
 	}
 
-	public function jsonSerialize()
-	{
+	public function jsonSerialize() {
 		return [
 			'id' => $this->id,
 			'session_id' => $this->sessionId,

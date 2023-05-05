@@ -7,8 +7,8 @@ use Utils\Database;
 use Tuupola\Middleware\CorsMiddleware;
 use Validators\AnswersValidator;
 
-require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../config/config.php';
+require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/../config/config.php';
 
 // Initialize database connection
 $db = \Utils\Database::getInstance($config['db'])->getConnection();
@@ -98,18 +98,37 @@ $app->group('/sessions', function (RouteCollectorProxy $group) use ($db) {
 		$total_points = 0;
 		foreach ($answers as $answer) {
 			$question = null;
-			$sessionQuestion = $db->query("SELECT * FROM session_questions WHERE id = {$answer['question_id']}")->fetch(PDO::FETCH_ASSOC);
+			$sessionQuestionStmt = $db->prepare("SELECT * FROM session_questions WHERE id = :id");
+			$sessionQuestionStmt->bindParam(':id', $answer['question_id'], PDO::PARAM_INT);
+			$sessionQuestionStmt->execute();
+			$sessionQuestion = $sessionQuestionStmt->fetch(PDO::FETCH_ASSOC);
 			if ($sessionQuestion['question_type'] === 'ma') {
-				$question = $db->query("SELECT * FROM maquestions WHERE id = {$sessionQuestion['maquestion_id']}")->fetch(PDO::FETCH_ASSOC);
+				$maQuestionStmt = $db->prepare("SELECT * FROM maquestions WHERE id = :id");
+				$maQuestionStmt->bindParam(':id', $sessionQuestion['maquestion_id'], PDO::PARAM_INT);
+				$maQuestionStmt->execute();
+				$question = $maQuestionStmt->fetch(PDO::FETCH_ASSOC);
 			}
 			elseif ($sessionQuestion['question_type'] === 'tf') {
-				$question = $db->query("SELECT * FROM tfquestions WHERE id = {$sessionQuestion['tfquestion_id']}")->fetch(PDO::FETCH_ASSOC);
+				$tfQuestionStmt = $db->prepare("SELECT * FROM tfquestions WHERE id = :id");
+				$tfQuestionStmt->bindParam(':id', $sessionQuestion['tfquestion_id'], PDO::PARAM_INT);
+				$tfQuestionStmt->execute();
+				$question = $tfQuestionStmt->fetch(PDO::FETCH_ASSOC);
 			}
 
 			if ($answer['question_type'] === 'ma') {
 				$is_correct = true;
 				foreach ($answer['selected_variants'] as $selectedVariant) {
-					$variant = $db->query("SELECT * FROM maquestion_variants WHERE maquestion_id = {$selectedVariant['maquestion_id']} AND id = {$selectedVariant['variant_id']}")->fetch(PDO::FETCH_ASSOC);
+					$query = "SELECT * FROM maquestion_variants 
+					  INNER JOIN session_questions ON maquestion_variants.maquestion_id = session_questions.maquestion_id 
+					  WHERE maquestion_variants.id = :variant_id AND session_questions.id = :session_question_id";
+					$stmt = $db->prepare($query);
+					$stmt->bindParam(':variant_id', $selectedVariant['variant_id'], PDO::PARAM_INT);
+					$stmt->bindParam(':session_question_id', $answer['question_id'], PDO::PARAM_INT);
+					$stmt->execute();
+					$variant = $stmt->fetch(PDO::FETCH_ASSOC);
+					if (!$variant) {
+						return false;
+					}
 					if (!$variant['is_correct']) {
 						$is_correct = false;
 						break;
@@ -119,7 +138,8 @@ $app->group('/sessions', function (RouteCollectorProxy $group) use ($db) {
 					$total_points++;
 				}
 				$sessionController->saveAnswerBySessionIdAndQuestionId($session->getId(), $answer);
-			} else {
+			}
+			else {
 				if ($answer['answer'] == $question['answer']) {
 					$total_points++;
 				}

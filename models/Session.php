@@ -5,7 +5,8 @@ namespace Models;
 /**
  * Represents a session.
  */
-class Session {
+class Session
+{
 	private ?int $id;
 	private string $username;
 	private int $maxPoints;
@@ -15,10 +16,10 @@ class Session {
 	/**
 	 * Initializes a new instance of the Session class.
 	 *
-	 * @param string $username The username associated with the session.
-	 * @param int $maxPoints The maximum number of points that can be earned in the session.
-	 * @param int $actualPoints The actual number of points earned in the session.
-	 * @param int|null $id The session ID, if it already exists.
+	 * @param string   $username      The username associated with the session.
+	 * @param int      $maxPoints     The maximum number of points that can be earned in the session.
+	 * @param int      $actualPoints  The actual number of points earned in the session.
+	 * @param int|null $id            The session ID, if it already exists.
 	 */
 	function __construct(string $username, int $maxPoints, ?int $actualPoints, int $isFinished = 0, ?int $id = null) {
 		$this->id = $id;
@@ -74,7 +75,7 @@ class Session {
 	/**
 	 * Sets the session ID.
 	 *
-	 * @param int $id The session ID.
+	 * @param int $id  The session ID.
 	 */
 	function setId(int $id): void {
 		$this->id = $id;
