@@ -14,7 +14,7 @@ require __DIR__.'/../config/config.php';
 $db = \Utils\Database::getInstance($config['db'])->getConnection();
 
 $app->add(new CorsMiddleware([
-	"origin" => ["http://localhost:5173"],
+	"origin" => ["*"],
 	"methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
 	"headers.allow" => ["Authorization", "If-Match", "Content-Type"],
 	"headers.expose" => ["Etag"],
